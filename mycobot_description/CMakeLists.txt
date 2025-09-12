@@ -20,6 +20,14 @@ install (
   DESTINATION share/${PROJECT_NAME}
 )
 
+# Install Python scripts
+install(
+  PROGRAMS 
+    scripts/test_collision_movements.py
+    scripts/simple_collision_detector.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 # Automates the process of setting up linting for the package, which
 # is the process of running tools that analyze the code for potential
 # errors, style issues, and other discrepancies that do not adhere to

@@ -61,4 +61,8 @@
 
     <xacro:include filename="$(find mycobot_description)/urdf/sensors/intel_rgbd_cam_d435.urdf.xacro"/>
 
+    <!-- Note: Contact sensors removed - use simple_collision_detector.py instead -->
+    <!-- The Gazebo contact sensors don't work properly with ROS2 Jazzy + Gazebo Harmony -->
+    <!-- Use: ros2 run mycobot_description simple_collision_detector.py -->
+
 </robot>

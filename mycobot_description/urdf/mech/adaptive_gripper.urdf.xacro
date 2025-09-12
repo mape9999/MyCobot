@@ -53,6 +53,24 @@
       <xacro:insert_block name="origin"/>
     </joint>
 
+    <!-- EE_link: End Effector frame at the gripper tip (for closed gripper). Adjust origin as needed in RViz. -->
+    <link name="${prefix}EE_link">
+      <!-- Minimal inertial values to keep simulators happy if needed; can be removed if only kinematic. -->
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="0.001"/>
+        <inertia ixx="1e-7" ixy="0" ixz="0" iyy="1e-7" iyz="0" izz="1e-7"/>
+      </inertial>
+      <!-- No visual/collision by default to avoid affecting collisions. -->
+    </link>
+
+    <joint name="${prefix}gripper_base_to_${prefix}EE_link" type="fixed">
+      <parent link="${prefix}gripper_base"/>
+      <child link="${prefix}EE_link"/>
+      <!-- Initial guess: along +Y from gripper_base; refine xyz/rpy after viewing in RViz. -->
+      <origin xyz="0.0 0.085 0.0" rpy="0 0 0"/>
+    </joint>
+
     <link name="${prefix}gripper_left1">
       <xacro:gripper_link_inertial/>
       <visual>

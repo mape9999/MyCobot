@@ -44,12 +44,14 @@ def process_ros2_controllers_config(context):
     # Define both source and install paths
     src_config_path = os.path.join(
         home,
-        'ros2_ws/src/mycobot_ros2/mycobot_moveit_config/config',
+        #'ros2_ws/src/mycobot_ros2/mycobot_moveit_config/config',
+        'mycobot_ws/src/mycobot_ros2/mycobot_moveit_config/config',
         robot_name
     )
     install_config_path = os.path.join(
         home,
-        'ros2_ws/install/mycobot_moveit_config/share/mycobot_moveit_config/config',
+        #'ros2_ws/install/mycobot_moveit_config/share/mycobot_moveit_config/config',
+        'mycobot_ws/install/mycobot_moveit_config/share/mycobot_moveit_config/config',
         robot_name
     )
 
@@ -92,6 +94,9 @@ ARGUMENTS = [
     DeclareLaunchArgument('use_camera', default_value='false',
                           choices=['true', 'false'],
                           description='Whether to use the RGBD Gazebo plugin for point cloud'),
+    DeclareLaunchArgument('use_contact_sensors', default_value='false',
+                          choices=['true', 'false'],
+                          description='Whether to enable contact sensors for self-collision detection'),
     DeclareLaunchArgument('use_gazebo', default_value='false',
                           choices=['true', 'false'],
                           description='Whether to use Gazebo simulation'),
@@ -176,6 +181,7 @@ def generate_launch_description():
         'flange_link:=', LaunchConfiguration('flange_link'), ' ',
         'gripper_type:=', LaunchConfiguration('gripper_type'), ' ',
         'use_camera:=', LaunchConfiguration('use_camera'), ' ',
+        'use_contact_sensors:=', LaunchConfiguration('use_contact_sensors'), ' ',
         'use_gazebo:=', LaunchConfiguration('use_gazebo'), ' ',
         'use_gripper:=', LaunchConfiguration('use_gripper')
     ]), value_type=str)

@@ -3,13 +3,16 @@
 <sdf version="1.6">
   <world name="default">
 
-    <!-- Plugin for simulating physics -->
+    <!-- Plugin for simulating physics with contact publishing -->
     <plugin
       filename="gz-sim-physics-system"
       name="gz::sim::systems::Physics">
       <engine>
         <filename>libgz-physics-bullet-featherstone-plugin.so</filename>
       </engine>
+      <contacts>
+        <publish_all>true</publish_all>
+      </contacts>
     </plugin>
 
     <!-- Plugin for handling user commands -->
@@ -35,6 +38,13 @@
     <plugin filename="gz-sim-imu-system"
       name="gz::sim::systems::Imu">
     </plugin>
+
+    <!-- Plugin for contact detection - Configuración para Gazebo Harmonic -->
+    <plugin filename="gz-sim-contact-system"
+      name="gz::sim::systems::Contact">
+    </plugin>
+    
+
 
     <!-- To add realistic gravity, do: 0.0 0.0 -9.8, otherwise do 0.0 0.0 0.0 -->
     <gravity>0.0 0.0 -9.8</gravity>

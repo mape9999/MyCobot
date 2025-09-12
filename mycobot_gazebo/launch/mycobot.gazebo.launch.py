@@ -21,6 +21,7 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
+from launch.actions import TimerAction
 
 
 def generate_launch_description():
@@ -66,6 +67,7 @@ def generate_launch_description():
     robot_name = LaunchConfiguration('robot_name')
     use_rviz = LaunchConfiguration('use_rviz')
     use_camera = LaunchConfiguration('use_camera')
+    use_contact_sensors = LaunchConfiguration('use_contact_sensors')
     use_gazebo = LaunchConfiguration('use_gazebo')
     use_robot_state_pub = LaunchConfiguration('use_robot_state_pub')
     use_sim_time = LaunchConfiguration('use_sim_time')
@@ -111,6 +113,11 @@ def generate_launch_description():
         name='use_camera',
         default_value='false',
         description='Flag to enable the RGBD camera for Gazebo point cloud simulation')
+
+    declare_use_contact_sensors_cmd = DeclareLaunchArgument(
+        name='use_contact_sensors',
+        default_value='false',
+        description='Flag to enable contact sensors for self-collision detection')
 
     declare_use_gazebo_cmd = DeclareLaunchArgument(
         name='use_gazebo',
@@ -171,6 +178,7 @@ def generate_launch_description():
         launch_arguments={
             'jsp_gui': jsp_gui,
             'use_camera': use_camera,
+            'use_contact_sensors': use_contact_sensors,
             'use_gazebo': use_gazebo,
             'use_rviz': use_rviz,
             'use_sim_time': use_sim_time
@@ -241,6 +249,21 @@ def generate_launch_description():
             '-Y', yaw
         ])
 
+    # Self-collision monitor node
+    self_collision_monitor_cmd = Node(
+        package='mycobot_description',
+        executable='self_collision_monitor_node.py',
+        name='self_collision_monitor',
+        output='screen',
+        parameters=[{
+            'robot_name': robot_name,
+            'collision_threshold': 0.1,
+            'use_sim_time': use_sim_time
+        }],
+        condition=IfCondition(use_contact_sensors)
+    )
+
+        
     # Create the launch description and populate
     ld = LaunchDescription()
 
@@ -249,6 +272,7 @@ def generate_launch_description():
     ld.add_action(declare_jsp_gui_cmd)
     ld.add_action(declare_load_controllers_cmd)
     ld.add_action(declare_use_camera_cmd)
+    ld.add_action(declare_use_contact_sensors_cmd)
     ld.add_action(declare_use_gazebo_cmd)
     ld.add_action(declare_use_rviz_cmd)
     ld.add_action(declare_use_robot_state_pub_cmd)
@@ -271,5 +295,7 @@ def generate_launch_description():
     ld.add_action(start_gazebo_ros_bridge_cmd)
     ld.add_action(start_gazebo_ros_image_bridge_cmd)
     ld.add_action(start_gazebo_ros_spawner_cmd)
+    ld.add_action(self_collision_monitor_cmd)
+
 
     return ld

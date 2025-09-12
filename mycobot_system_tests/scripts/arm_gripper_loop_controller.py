@@ -75,6 +75,7 @@ class ArmGripperLoopController(Node):
 
         # Define target and home positions for the arm
         self.target_pos = [1.345, -1.23, 0.264, -0.296, 0.389, -1.5]
+        
         self.home_pos = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
         # Create timer that triggers the control loop quickly after start (0.1 seconds)
